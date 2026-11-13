@@ -39,3 +39,7 @@ Az elkészített PDF ingatlanfelvételi összefoglaló. Nem megbízási szerződ
 
 ## Forrás felépítése
 app/page.js: React kliensbelépő; app/layout.js: magyar metaadatok; app/globals.css: elfogadott arculat; lib/shell.js: rögzített alkalmazásváz; lib/intake-controller.js: a korábban kipróbált kliensoldali működés. Nincs iframe, külső CDN vagy futásidejű kódkiértékelés.
+
+## 02 – Rendezett munka borító
+A kezdőlap a kiválasztott 2. tervet követi: világos zöld–arany arculat, nagy betűk, tabletes munkatérkép, működő Új felvétel és Mentett felvételek gomb. Fejléc: Ingatlanfelvétel / Digitális adatlap. Az adatlapból a Kezdőlap gombbal visszaléphetsz. A korábbi böngészős adatok azonos webcímen megmaradnak.
+Frissítés: a ZIP ingatlanfelvetel-app mappájának tartalmát másold a meglévő projektmappába, felülírással. A .git, node_modules, .next mappát ne töröld. Futtasd: npm run build, majd git add ., git commit és git push.
