@@ -32,7 +32,7 @@ self.addEventListener('fetch', event => {
     })());
     return;
   }
-  if (paths.has(url.pathname) || url.pathname.startsWith('/_next/static/')) {
+  if (paths.has(url.pathname)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE);
       return (await cache.match(request)) || (await caches.match(request)) || fetch(request);

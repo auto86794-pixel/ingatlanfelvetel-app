@@ -1,16 +1,21 @@
-import { readFile, writeFile, readdir } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import path from 'node:path';
-const html = await readFile('.next/server/app/index.html', 'utf8');
-async function walk(dir) {
-  const entries = await readdir(dir, { withFileTypes: true });
-  const lists = await Promise.all(entries.map(e => e.isDirectory() ? walk(path.join(dir, e.name)) : path.join(dir, e.name)));
-  return lists.flat();
-}
-const staticFiles = (await walk('.next/static')).filter(f => /\.(js|css|woff2?)$/.test(f)).sort();
-const assets = ['/offline-app.html', '/borito-munkater.png', '/icon.svg', '/icon-192.png', '/icon-512.png', '/manifest.webmanifest', ...staticFiles.map(f => '/' + f.replace(/^\.next\//, '_next/'))];
-const template = await readFile('scripts/sw-template.js', 'utf8');
-const version = createHash('sha256').update(html).update(template).update(assets.join('\n')).digest('hex').slice(0, 16);
-await writeFile('public/offline-app.html', html);
+// Build from application source; never depend on Next's internal output paths.
+const read = file => readFile(file, 'utf8');
+const shellSource = await read('lib/shell.js');
+const shell = JSON.parse(shellSource.replace(/^export const shell = /, '').trim().replace(/;$/, ''));
+const css = await read('app/globals.css');
+const controller = await read('lib/intake-controller.js');
+const mobile = await read('lib/mobile-support.js');
+// Both modules are dependency-free browser modules, shared with the Next entry.
+const html = `<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#164d38"><meta name="apple-mobile-web-app-capable" content="yes"><title>Ingatlanfelvétel</title><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg"><link rel="apple-touch-icon" href="/icon-192.png"><link rel="stylesheet" href="/offline-style.css"></head><body><div id="app-root">${shell}</div><aside id="mobile-support" class="mobile-support" aria-label="Telefonos használat"></aside><script type="module" src="/offline-start.js"></script></body></html>`;
+const start = `import {mountIntake} from '/offline-intake.js';import {mobileShell,mountMobile} from '/offline-mobile.js';mountIntake(document.getElementById('app-root'));const panel=document.getElementById('mobile-support');panel.innerHTML=mobileShell;mountMobile(panel,true);`;
+const outputs = { 'offline-app.html': html, 'offline-style.css': css, 'offline-intake.js': controller, 'offline-mobile.js': mobile, 'offline-start.js': start };
+for (const [file, content] of Object.entries(outputs)) await writeFile('public/' + file, content);
+const assets = [...Object.keys(outputs).map(file => '/' + file), '/borito-munkater.png', '/icon.svg', '/icon-192.png', '/icon-512.png', '/manifest.webmanifest'];
+const template = await read('scripts/sw-template.js');
+const hash = createHash('sha256').update(template);
+for (const url of assets) hash.update(await readFile('public' + url));
+const version = hash.digest('hex').slice(0, 16);
 await writeFile('public/sw.js', template.replace('__PRECACHE__', JSON.stringify(assets)).replace('__VERSION__', JSON.stringify(version)));
-console.log(`Offline shell ready: ${assets.length} files, version ${version}`);
+console.log(`Offline shell ready: ${assets.length} source-built files, version ${version}`);

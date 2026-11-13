@@ -54,3 +54,8 @@ A produkciós build generálja a public/sw.js és public/offline-app.html fájlo
 Az új változatot a „Mentés és frissítés” gomb tölti be. Nincs önműködő oldalújratöltés kitöltés közben. Sikertelen mentéskor nem frissít. A korábbi alkalmazásfájlok gyorsítótára megmarad, hogy a másik ablakban nyitott felvétel is folytatható legyen. Ez nem felhős szinkron és nem biztonsági mentés: a böngészőadatok törlése az offline csomagot és a felvételeket is érintheti. Exportálj rendszeresen.
 
 Ellenőrzés: sikeres Next.js build, meglévő működési tesztek; Chrome-ban valódi alkalmazásújratöltés leállított kiszolgáló mellett, új felvétel mentése és visszanyitása. Fizikai Android/iPhone készülék ebben a körben nem volt elérhető; ezeken az éles verzióval végezd el a fenti próbát.
+
+## 03 FIX – Vercel offline build
+A korábbi build a .next/server/app/index.html fájlt kereste, amely Vercelen nem minden konfigurációban készül el ezen az útvonalon. A javított generátor közvetlenül az alkalmazás saját forrásából állítja elő az offline felületet. Ugyanazt az adatlapvezérlőt, arculatot, alkalmazásvázat és telefonos segédet használja a Next.js oldal és az offline oldal. Nincs Next belső fájlútvonal-függőség.
+A teszt az offline csomagot külön, .next nélküli mappában is előállítja, és ellenőrzi az összes hivatkozott fájlt.
+Frissítés: minden fájlt másolj át a meglévő projektbe felülírással (a scripts, lib és components mappát is), majd npm run build. Siker után Git commit és push.

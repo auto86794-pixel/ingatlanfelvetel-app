@@ -7,7 +7,7 @@
     "build": "next build --webpack && node scripts/build-offline.mjs",
     "start": "next start",
     "check": "node --check lib/intake-controller.js",
-    "test": "node check.cjs"
+    "test": "node check.cjs && node tests/offline-build.cjs"
   },
   "dependencies": {
     "next": "16.4.6",
