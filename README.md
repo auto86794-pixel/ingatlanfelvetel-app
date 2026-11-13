@@ -32,7 +32,7 @@ A korábbi próbaoldal adatai nem költöznek át automatikusan. A régi oldalon
 Az inkognitómód, a böngészőadatok törlése vagy a készülék elvesztése adatvesztést okozhat; rendszeresen exportálj. A JSON-ban a fotók és az aláírás is benne van, kezeld bizalmasan.
 
 ## Mobil
-Reszponzív felület, érintéses aláírás, kezdőképernyőre helyezéshez alkalmazásmanifest és ikonok. Az oldal első megnyitásához internet kell; teljes offline indítás még nincs.
+Reszponzív felület, érintéses aláírás, kezdőképernyőre helyezéshez alkalmazásmanifest és ikonok. Az első megnyitáshoz internet kell; a 03-as verzió offline előkészítése után internet nélkül is indítható.
 
 ## Dokumentum
 Az elkészített PDF ingatlanfelvételi összefoglaló. Nem megbízási szerződés. A képernyőre rajzolt aláírás képként kerül bele.
@@ -43,3 +43,14 @@ app/page.js: React kliensbelépő; app/layout.js: magyar metaadatok; app/globals
 ## 02 – Rendezett munka borító
 A kezdőlap a kiválasztott 2. tervet követi: világos zöld–arany arculat, nagy betűk, tabletes munkatérkép, működő Új felvétel és Mentett felvételek gomb. Fejléc: Ingatlanfelvétel / Digitális adatlap. Az adatlapból a Kezdőlap gombbal visszaléphetsz. A korábbi böngészős adatok azonos webcímen megmaradnak.
 Frissítés: a ZIP ingatlanfelvetel-app mappájának tartalmát másold a meglévő projektmappába, felülírással. A .git, node_modules, .next mappát ne töröld. Futtasd: npm run build, majd git add ., git commit és git push.
+
+## 03 – Telepítés és offline használat
+Android- és iPhone-útmutató a felületen. Támogatott böngészőn saját telepítésgomb is megjelenhet. Internetkapcsolat- és offline-előkészítési állapotjelzés.
+
+A produkciós build generálja a public/sw.js és public/offline-app.html fájlokat. Ezeket nem kell kézzel szerkeszteni vagy Gitbe tenni. A scripts/ mappát és a módosított package.json-t is másold át! A build csak a teljes Next build és az offline csomag előállítása után sikeres.
+
+Élesítés után elsőként internet mellett nyisd meg az appot. Várd meg az „Offline használatra kész” jelzést, majd töltsd újra az oldalt. Ezután teszteld repülőgépes módban: újranyitás, új felvétel, mentés, visszanyitás. Az adatlap, fotók és aláírás helyben működik; a PDF mentésének elérhetősége az operációs rendszer nyomtatási/megosztási lehetőségeitől függ.
+
+Az új változatot a „Mentés és frissítés” gomb tölti be. Nincs önműködő oldalújratöltés kitöltés közben. Sikertelen mentéskor nem frissít. A korábbi alkalmazásfájlok gyorsítótára megmarad, hogy a másik ablakban nyitott felvétel is folytatható legyen. Ez nem felhős szinkron és nem biztonsági mentés: a böngészőadatok törlése az offline csomagot és a felvételeket is érintheti. Exportálj rendszeresen.
+
+Ellenőrzés: sikeres Next.js build, meglévő működési tesztek; Chrome-ban valódi alkalmazásújratöltés leállított kiszolgáló mellett, új felvétel mentése és visszanyitása. Fizikai Android/iPhone készülék ebben a körben nem volt elérhető; ezeken az éles verzióval végezd el a fenti próbát.
