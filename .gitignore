@@ -14,3 +14,5 @@ public/offline-style.css
 public/offline-intake.js
 public/offline-mobile.js
 public/offline-start.js
+
+public/offline-cloud.js

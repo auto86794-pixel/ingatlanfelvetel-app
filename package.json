@@ -7,14 +7,19 @@
     "build": "next build --webpack && node scripts/build-offline.mjs",
     "start": "next start",
     "check": "node --check lib/intake-controller.js",
-    "test": "node check.cjs && node tests/offline-build.cjs"
+    "test": "node check.cjs && node tests/offline-build.cjs && node tests/cloud-sync.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.119.0",
     "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
   "engines": {
     "node": ">=20.9.0"
-  }
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  },
+  "type": "module"
 }
