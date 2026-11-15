@@ -7,7 +7,8 @@ const shellSource = await read('lib/shell.js');
 const shell = JSON.parse(shellSource.replace(/^export const shell = /, '').trim().replace(/;$/, ''));
 const css = await read('app/globals.css');
 await build({entryPoints:['lib/cloud-panel.js'],bundle:true,format:'esm',platform:'browser',target:'es2020',outfile:'public/offline-cloud.js',minify:true});
-const controller = await read('lib/intake-controller.js');
+const controllerBuild=await build({entryPoints:['lib/intake-controller.js'],bundle:true,format:'esm',platform:'browser',target:'es2020',write:false});
+const controller=controllerBuild.outputFiles[0].text;
 const mobile = await read('lib/mobile-support.js');
 // Both modules are dependency-free browser modules, shared with the Next entry.
 const html = `<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#164d38"><meta name="apple-mobile-web-app-capable" content="yes"><title>Ingatlanfelvétel</title><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg"><link rel="apple-touch-icon" href="/icon-192.png"><link rel="stylesheet" href="/offline-style.css"></head><body><div id="app-root">${shell}</div><aside id="mobile-support" class="mobile-support" aria-label="Telefonos használat"></aside><aside id="cloud-support" class="mobile-support cloud-support" aria-label="Fiók és felhős mentés"></aside><script type="module" src="/offline-start.js"></script></body></html>`;

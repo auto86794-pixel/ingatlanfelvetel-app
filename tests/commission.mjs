@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {calculateCommission} from '../lib/commission.js';
+const base={price:'64900000',commissionPercent:'2,5',commissionBasis:'Bruttó díj'};
+assert.equal(calculateCommission(base).total,1622500);
+const net=calculateCommission({...base,commissionBasis:'Nettó díj + áfa',commissionVat:'27'});
+assert.equal(net.base,1622500);assert.equal(net.vatAmount,438075);assert.equal(net.total,2060575);
+const minimum=calculateCommission({...base,commissionMinimum:'2000000'});
+assert.equal(minimum.total,2000000);assert.equal(minimum.minimumApplies,true);
+assert.equal(calculateCommission({...base,commissionPercent:'0'}).total,0);
+assert.equal(calculateCommission({...base,commissionBasis:'Áfamentes díj',commissionVat:'27'}).total,1622500);
+assert.equal(calculateCommission({}).state,'empty');
+assert.equal(calculateCommission({...base,price:''}).state,'incomplete');
+assert.equal(calculateCommission({...base,commissionBasis:'Nettó díj + áfa'}).state,'incomplete');
+for(const commissionPercent of ['-1','101','2,5,3','Infinity','1e3'])assert.equal(calculateCommission({...base,commissionPercent}).state,'invalid');
+assert.equal(calculateCommission({...base,commissionMinimum:'-100'}).state,'invalid');
+assert.equal(calculateCommission({...base,price:'100',commissionPercent:'2,5'}).total,3);
+console.log('PASS: commission decimal comma, net/gross, VAT, minimum, zero, rounding, invalid/incomplete fields');

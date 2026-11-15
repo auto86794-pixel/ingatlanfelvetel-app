@@ -1,4 +1,4 @@
-# Ingatlanfelvétel 04 – belépés és felhős mentés
+# Ingatlanfelvétel 05 – közvetítői díj és mentési javítások
 
 ## Frissítés Windows alatt
 A csomag ingatlanfelvetel-app mappájának tartalmát másold az F:\ingatlanfelvetel-app projektbe felülírással. Ne töröld a .git mappát. Új függőségek is vannak, ezért:
@@ -58,3 +58,12 @@ A build a saját forrásból állítja elő a public/offline-* és public/sw.js 
 A build és a működési tesztek sikeresek. Automatizált teszt: offline csomag .next nélküli mappában; feltöltés és letöltés szimulált felhővel; konfliktusmegőrzés; hálózati hiba utáni újrapróbálás; másik fiók kizárása. A valódi adatbázison, visszagörgetett teszttranzakcióban: saját olvasás, idegen olvasás/írás tiltása, verzióütközés tiltása és idempotens mentés. A biztonsági advisor nem jelzett hibát.
 Böngészőben ellenőrizve a frissítési folyamat, a fiókpanel megjelenése és a régi helyi felvételek megőrzése. Valódi e-mailes regisztrációt, belépést és két fizikai készülék közötti átvitelt a saját fiókoddal, az URL-beállítás után kell kipróbálni. Nem történt valódi ügyféladat-feltöltés.
 A privát tárhely minden mentésből új verziót őriz meg; régi verziók automatikus törlése nincs. A helyi export továbbra is ajánlott biztonsági másolat.
+
+## 05 – Közvetítői díj
+Az Ingatlan (2.) lépésben, az irányár alatti Közvetítői díj részben adható meg a százalék. Például 2,5 és 2.5 egyaránt elfogadott. Díjmód: Bruttó díj / Nettó díj + áfa / Áfamentes díj. Nettó módnál külön megadandó az alkalmazott áfa százaléka; nincs automatikusan rögzített áfamérték. Az opcionális minimumdíjat ugyanabban a nettó/bruttó/áfamentes módban kell megadni. A számítás az irányárból készül, egész forintra kerekítve. A nettó díj és az áfa külön kerekített összege adja a bruttó összeget. Nem tényleges eladási áron alapuló jutalékelszámolás.
+A díj és a számítás megjelenik az összegzésben és a PDF nyomtatott tartalmában, a JSON export/import és a felhős szinkron is megőrzi. A régi, díj nélküli felvételek tovább használhatók. Az új mezők opcionálisak; részben kitöltött vagy hibás díj esetén a PDF-készítés javítást kér.
+Nem kell új SQL-t futtatni. A meglévő adatbázist, fiókokat és hozzáférést használja.
+
+További javítások: a fejléc Fiók és felhő gombja közvetlenül a fiókrészre visz. Új felvétel és kezdőlapra/listára váltás megvárja a helyi mentést. Sikertelen mentéskor a folyamat az adatlapon marad; a PDF-készítés sem folytatódik. Fotófeldolgozás alatt az új felvétel indítása várakoztatást kér.
+
+Ellenőrzés: a build és minden teszt sikeres. Számítási tesztek: tizedesvessző, nettó/bruttó mód, felhasználó által megadott áfa, minimum, nulla, kerekítés, hibás és hiányos értékek. Mentési hibákra célzott teszt. A felhős szinkron szimulált tesztjében az új mezők is megmaradtak. Böngészőben kitöltve 64 900 000 Ft / 2,5% / nettó + 27%: 1 622 500 Ft nettó, 438 075 Ft áfa, 2 060 575 Ft bruttó; mentés és visszanyitás után is helyes. A valódi fiókos szinkron és a telefonos PDF-mentés az élesítés utáni saját próbával ellenőrizendő.
