@@ -91,3 +91,14 @@ A magyar ékezetekhez szükséges betűkészletek a csomag részei, licencükkel
 Ellenőrzés: sikeres teljes tesztcsomag és build; közvetlen böngészős letöltés; kétoldalas PDF vizuális és szöveges ellenőrzése négy fotóval, aláírással és díjszámítással. Fizikai Android/iPhone megosztást saját készüléken kell kipróbálni.
 
 Frissítés: a teljes mappa tartalmát másold a meglévő projektbe felülírással, az új public/fonts mappával és package-lock.json fájllal együtt. npm ci → npm test → npm run build. Élesítés után Mentés és frissítés.
+
+## 08 – Mentési visszajelzés és ellenőrzőlista
+A fejléc jelzi, ha mentés folyamatban van, ha az adatlap csak ezen a készüléken van elmentve, illetve ha a saját fiókban felhős mentésre vár vagy már szinkronizált. A felhőbe továbbra is a Szinkronizálás gombbal küldhető fel. Az állapot a felvétel visszanyitásakor és szinkronizálás után is frissül.
+
+Az 5. lépés ellenőrzőlistája a hiányzó nevet, ingatlantípust, címet, a hibás/hiányos közvetítői díjat és a módosítás miatt érvénytelenné vált aláírást jelzi. A sorra kattintva a megfelelő lépés és mező nyílik meg. Aláírás nélkül is készíthető adatlap; a korábbi aláírás törlésével ez külön választható. A többi opcionális mező továbbra sem válik kötelezővé.
+
+Mentetlen változás, aláírás rajzolása vagy fotófeldolgozás alatt az oldal elhagyása böngészős figyelmeztetést kér. Háttérbe kerüléskor a program megpróbálja elmenteni a helyi változásokat. A böngésző vagy telefon kényszerített bezárása nem garantálja az események lefutását; a mentési állapot ellenőrzése és a biztonsági másolat továbbra is ajánlott. Mentési hibánál az új adatlapra vagy kezdőlapra váltás továbbra is blokkolt.
+
+Frissítés: a teljes projektmappa tartalmának felülírása, majd npm ci → npm test → npm run build. Nincs új adatbázis, SQL vagy fiókbeállítás.
+
+08 ellenőrzés: sikeres teljes tesztcsomag és Next.js build. Böngészőben az üres adatlap három hiánya megjelent, a név és cím ellenőrzősora a megfelelő mezőre vitte a fókuszt; javítás után a lista eltűnt. Az automatikus helyi mentés folyamatban és elmentve állapotát is ellenőriztük. Felhős állapotok és kilépésvédelmi események automatizált tesztben ellenőrizve; fizikai telefon kényszerített bezárása nem tesztelt.

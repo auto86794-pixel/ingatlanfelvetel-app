@@ -19,3 +19,5 @@ header>div:first-child{margin-right:auto}header small{font-size:15px}#homeBtn{fo
 @media print{html,body,#app-root{background:#fff!important;min-height:0!important;height:auto!important}#printArea .document-photos{break-before:page}#printArea .document-gallery{orphans:1;widows:1}}
 
 .document-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.document-actions button{font-size:14px}.pdf-ready:empty{display:none}.pdf-ready{margin-top:16px;padding:14px;border:1px solid #d0ddc9;background:#f4f8ee;border-radius:10px}.pdf-ready p{margin:4px 0;overflow-wrap:anywhere}.pdf-ready a{color:var(--g);font-weight:700;text-decoration:underline}.pdf-ready .muted{font-size:12px}
+
+.document-checks{margin:18px 0;padding:16px;border:1px solid #c9d7c9;border-radius:12px;background:#f3f7f0}.document-checks h4{margin:0 0 8px}.document-checks p{margin:6px 0}.document-checks button{display:block;width:100%;text-align:left;margin:8px 0;white-space:normal}#status{white-space:normal;max-width:440px;line-height:1.5}

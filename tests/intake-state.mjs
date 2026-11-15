@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {savingLabel,documentIssues} from '../lib/intake-state.js';
+assert.equal(documentIssues({name:'   ',address:' ',type:''}).length,3);
+const record={name:'Ágnes',address:'Minta 12.',type:'Lakás',updated:'2026-11-15'};
+assert.equal(documentIssues(record).length,0);
+assert.match(savingLabel(record,'',false),/Ezen a készüléken/);
+assert.match(savingLabel({...record,_dirty:true,_cloudVersion:2},'account',false),/felhős mentésre vár/);
+assert.match(savingLabel({...record,_dirty:false,_cloudVersion:2},'account',false),/Felhőbe szinkronizálva/);
+assert.match(savingLabel(record,'account',true),/folyamatban/);
+assert.equal(documentIssues({...record,needsSignature:true})[0].key,'signature');
+assert.equal(documentIssues({...record,commissionPercent:'2,5'})[0].key,'commissionBasis');
+assert.equal(documentIssues({...record,commissionPercent:'2,5',commissionBasis:'Nettó díj + áfa'})[0].key,'commissionVat');
+console.log('Mentési állapot és dokumentumellenőrzés: rendben.');

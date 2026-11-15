@@ -3,7 +3,7 @@ const {join}=require('node:path');const {tmpdir}=require('node:os');const {execF
 const temp=mkdtempSync(join(tmpdir(),'intake-offline-'));
 try {
  for(const dir of ['lib','scripts','app','public','public/fonts'])mkdirSync(join(temp,dir));
- for(const file of ['lib/shell.js','lib/commission.js','lib/document-render.js','lib/pdf-export.js','public/fonts/DejaVuSans.ttf','public/fonts/DejaVuSans-Bold.ttf','lib/intake-controller.js','lib/mobile-support.js','lib/cloud-client.js','lib/cloud-sync.js','lib/cloud-panel.js','app/globals.css','scripts/build-offline.mjs','scripts/sw-template.js','public/borito-munkater.png','public/icon.svg','public/icon-192.png','public/icon-512.png','public/manifest.webmanifest'])copyFileSync(file,join(temp,file));
+ for(const file of ['lib/shell.js','lib/commission.js','lib/document-render.js','lib/pdf-export.js','lib/intake-state.js','public/fonts/DejaVuSans.ttf','public/fonts/DejaVuSans-Bold.ttf','lib/intake-controller.js','lib/mobile-support.js','lib/cloud-client.js','lib/cloud-sync.js','lib/cloud-panel.js','app/globals.css','scripts/build-offline.mjs','scripts/sw-template.js','public/borito-munkater.png','public/icon.svg','public/icon-192.png','public/icon-512.png','public/manifest.webmanifest'])copyFileSync(file,join(temp,file));
  assert.equal(existsSync(join(temp,'.next')),false);
  const {symlinkSync}=require('node:fs');symlinkSync(join(process.cwd(),'node_modules'),join(temp,'node_modules'),'dir');execFileSync(process.execPath,['scripts/build-offline.mjs'],{cwd:temp});
  const sw=readFileSync(join(temp,'public/sw.js'),'utf8');
