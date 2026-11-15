@@ -1,4 +1,4 @@
-# Ingatlanfelvétel 05 – közvetítői díj és mentési javítások
+# Ingatlanfelvétel 06 – egységes összegzés és PDF
 
 ## Frissítés Windows alatt
 A csomag ingatlanfelvetel-app mappájának tartalmát másold az F:\ingatlanfelvetel-app projektbe felülírással. Ne töröld a .git mappát. Új függőségek is vannak, ezért:
@@ -67,3 +67,16 @@ Nem kell új SQL-t futtatni. A meglévő adatbázist, fiókokat és hozzáféré
 További javítások: a fejléc Fiók és felhő gombja közvetlenül a fiókrészre visz. Új felvétel és kezdőlapra/listára váltás megvárja a helyi mentést. Sikertelen mentéskor a folyamat az adatlapon marad; a PDF-készítés sem folytatódik. Fotófeldolgozás alatt az új felvétel indítása várakoztatást kér.
 
 Ellenőrzés: a build és minden teszt sikeres. Számítási tesztek: tizedesvessző, nettó/bruttó mód, felhasználó által megadott áfa, minimum, nulla, kerekítés, hibás és hiányos értékek. Mentési hibákra célzott teszt. A felhős szinkron szimulált tesztjében az új mezők is megmaradtak. Böngészőben kitöltve 64 900 000 Ft / 2,5% / nettó + 27%: 1 622 500 Ft nettó, 438 075 Ft áfa, 2 060 575 Ft bruttó; mentés és visszanyitás után is helyes. A valódi fiókos szinkron és a telefonos PDF-mentés az élesítés utáni saját próbával ellenőrizendő.
+
+## 06 – Egységes dokumentum és visszanyitás
+A dokumentum előnézete, az 5. lépés összegzése és a nyomtatási tartalom ugyanabból a közös dokumentumkészítőből épül fel (lib/document-render.js). A fejezetek, fotósorrend, díjösszegek és aláírás ezért azonosak. Magyar dátum-, forint- és területformázás, egységes zöld–arany fejléc. A belső megjegyzés továbbra sem szerepel az átadott dokumentumban.
+
+Fotók: az összegzésben is láthatók, sorszámmal és Borítókép jelöléssel. A PDF-ben a fotómelléklet új oldalon indul. A képarány megmarad; nincs levágás. Az aláírás a fotók után kerül a dokumentumba, egyben tartott blokkban. Az aláírás nélküli adatlap ezt külön jelzi.
+
+PDF-készítés előtt a program ment és megvárja a fotók, aláírás betöltését. Hibás vagy nem betölthető kép esetén nem készít hiányos nyomatot, hanem javítást kér. A nyomtatási tartalom a gomb megnyomásakor rögzített adatmásolatból készül.
+
+Aláírás: a képernyőméret változásakor a korábbi kép képarányosan visszakerül az aláírásmezőbe. Egy üres érintés nem hoz létre aláírást. Az adatlap módosítása továbbra is új aláírást kér.
+
+Ellenőrzések: sikeres build és teljes tesztcsomag. A szimulált felhős szinkron tesztje fotósorrendet, közvetítői díjat, aláírót és aláírást is ellenőriz. Böngészőben régi felvétel megőrzése frissítés után; 4 fotós, aláírt próbafelvétel importálása, mentése, visszanyitása, összegzése és nyomtatási tartalma. A közös nyomtatási HTML-ből külön PDF-rendelővel készült 3 oldalas próbanyomat minden oldalát vizuálisan ellenőriztük; ékezetek, díj, fotók, aláírás és a belső megjegyzés kihagyása rendben. Ez nem helyettesíti az Android/iPhone saját nyomtatási és PDF-mentési próbáját. Fizikai telefonos forgatást és a valódi kétfiókos szinkront ebben a körben nem futtattunk.
+
+Frissítés: a teljes ingatlanfelvetel-app mappa tartalmát másold a meglévőbe felülírással, különösen a lib/document-render.js új fájlt és a scripts mappát. npm ci → npm test → npm run build → Git → Vercel. Nem kell új SQL, másik adatbázis vagy új fiók. Az éles appban a Mentés és frissítés gombbal töltsd be az új verziót.
