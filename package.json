@@ -1,17 +1,19 @@
 {
   "name": "ingatlanfelvetel-app",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack && node scripts/build-offline.mjs",
     "start": "next start",
     "check": "node --check lib/intake-controller.js",
-    "test": "node check.cjs && node tests/offline-build.cjs && node tests/cloud-sync.mjs && node tests/commission.mjs && node tests/document.mjs"
+    "test": "node check.cjs && node tests/offline-build.cjs && node tests/cloud-sync.mjs && node tests/commission.mjs && node tests/document.mjs && node tests/pdf-export.mjs"
   },
   "dependencies": {
+    "@pdf-lib/fontkit": "1.1.1",
     "@supabase/supabase-js": "2.119.0",
     "next": "16.4.6",
+    "pdf-lib": "1.17.1",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
@@ -19,7 +21,8 @@
     "node": ">=20.9.0"
   },
   "devDependencies": {
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "linkedom": "0.18.15"
   },
   "type": "module"
 }

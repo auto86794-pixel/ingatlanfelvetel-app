@@ -15,7 +15,7 @@ const html = `<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta n
 const start = `import {cloudShell,mountCloud} from '/offline-cloud.js';import {mountIntake} from '/offline-intake.js';import {mobileShell,mountMobile} from '/offline-mobile.js';mountIntake(document.getElementById('app-root'));const panel=document.getElementById('mobile-support');panel.innerHTML=mobileShell;mountMobile(panel,true);const cloud=document.getElementById('cloud-support');cloud.innerHTML=cloudShell;mountCloud(cloud);`;
 const outputs = { 'offline-app.html': html, 'offline-style.css': css, 'offline-intake.js': controller, 'offline-mobile.js': mobile, 'offline-start.js': start };
 for (const [file, content] of Object.entries(outputs)) await writeFile('public/' + file, content);
-const assets = [...Object.keys(outputs).map(file => '/' + file), '/offline-cloud.js', '/borito-munkater.png', '/icon.svg', '/icon-192.png', '/icon-512.png', '/manifest.webmanifest'];
+const assets = [...Object.keys(outputs).map(file => '/' + file), '/offline-cloud.js','/fonts/DejaVuSans.ttf','/fonts/DejaVuSans-Bold.ttf', '/borito-munkater.png', '/icon.svg', '/icon-192.png', '/icon-512.png', '/manifest.webmanifest'];
 const template = await read('scripts/sw-template.js');
 const hash = createHash('sha256').update(template);
 for (const url of assets) hash.update(await readFile('public' + url));

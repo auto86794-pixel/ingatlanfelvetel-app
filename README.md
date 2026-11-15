@@ -80,3 +80,14 @@ Aláírás: a képernyőméret változásakor a korábbi kép képarányosan vis
 Ellenőrzések: sikeres build és teljes tesztcsomag. A szimulált felhős szinkron tesztje fotósorrendet, közvetítői díjat, aláírót és aláírást is ellenőriz. Böngészőben régi felvétel megőrzése frissítés után; 4 fotós, aláírt próbafelvétel importálása, mentése, visszanyitása, összegzése és nyomtatási tartalma. A közös nyomtatási HTML-ből külön PDF-rendelővel készült 3 oldalas próbanyomat minden oldalát vizuálisan ellenőriztük; ékezetek, díj, fotók, aláírás és a belső megjegyzés kihagyása rendben. Ez nem helyettesíti az Android/iPhone saját nyomtatási és PDF-mentési próbáját. Fizikai telefonos forgatást és a valódi kétfiókos szinkront ebben a körben nem futtattunk.
 
 Frissítés: a teljes ingatlanfelvetel-app mappa tartalmát másold a meglévőbe felülírással, különösen a lib/document-render.js új fájlt és a scripts mappát. npm ci → npm test → npm run build → Git → Vercel. Nem kell új SQL, másik adatbázis vagy új fiók. Az éles appban a Mentés és frissítés gombbal töltsd be az új verziót.
+
+## 07 – Közvetlen PDF-letöltés
+Az 5. lépés PDF letöltése gombja valódi PDF-fájlt készít, nyomtatási párbeszéd nélkül. A böngésző a saját letöltési beállítása szerint menti, általában a Letöltések mappába. A kész fájl a Letöltés újra hivatkozással ismét elérhető; szerkesztés után újra kell készíteni.
+
+A PDF a készüléken készül. Nem küldjük automatikusan e-mailben, és nem mentjük külön PDF-ként a felhőbe. A támogatott készülékeken külön megosztási gomb jelenik meg: először PDF előkészítése megosztáshoz, majd PDF megosztása. A megosztás célját a felhasználó választja a készülék menüjében. A Nyomtatás gomb továbbra is elérhető.
+
+A magyar ékezetekhez szükséges betűkészletek a csomag részei, licencükkel együtt. Az Offline használatra kész jelzés után a PDF-készítéshez sem szükséges internet. Hibás kép esetén a program javítást kér. Nincs adatbázis-módosítás.
+
+Ellenőrzés: sikeres teljes tesztcsomag és build; közvetlen böngészős letöltés; kétoldalas PDF vizuális és szöveges ellenőrzése négy fotóval, aláírással és díjszámítással. Fizikai Android/iPhone megosztást saját készüléken kell kipróbálni.
+
+Frissítés: a teljes mappa tartalmát másold a meglévő projektbe felülírással, az új public/fonts mappával és package-lock.json fájllal együtt. npm ci → npm test → npm run build. Élesítés után Mentés és frissítés.

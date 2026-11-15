@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {parseHTML} from 'linkedom';
+import {PDFDocument} from 'pdf-lib';
+import {renderDocument} from '../lib/document-render.js';
+import {extractDocument,createPdf,pdfFilename} from '../lib/pdf-export.js';
+const {document}=parseHTML('<html><body></body></html>');
+const tiny='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl2n0sAAAAASUVORK5CYII=';
+const record={id:'11111111',date:'2026-11-15',name:'Teszt Ágnes',city:'Debrecen',address:'Minta utca 12.',type:'Lakás',price:'64900000',commissionPercent:'2,5',commissionBasis:'Bruttó díj',internal:'INTERNAL_SECRET',photos:[],owners:[],roomRows:[]};
+const model=extractDocument(renderDocument(record),document);
+assert(!JSON.stringify(model).includes('INTERNAL_SECRET'));assert(JSON.stringify(model).replace(/\s/g,'').includes('1622500Ft'));
+const fonts=await Promise.all(['DejaVuSans.ttf','DejaVuSans-Bold.ttf'].map(f=>readFile('public/fonts/'+f)));
+const bytes=await createPdf(model,{fonts});assert.equal(new TextDecoder().decode(bytes.slice(0,5)),'%PDF-');
+assert((await PDFDocument.load(bytes)).getPageCount()>=1);
+const long=structuredClone(model);long.sections.push({title:'Hosszú megjegyzés',rows:[{label:'Megjegyzés',value:'Árvíztűrő tükörfúrógép. '.repeat(400)}],notes:[]});assert((await PDFDocument.load(await createPdf(long,{fonts}))).getPageCount()>1);
+const broken=structuredClone(model);broken.photos.push({src:'data:image/png;base64,YQ==',caption:'Hibás kép'});await assert.rejects(()=>createPdf(broken,{fonts}),/nem olvasható/);
+assert(pdfFilename(record).endsWith('.pdf'));assert(!pdfFilename({...record,address:'../../:bad/<>"'}).includes('/'));
+console.log('PASS: real PDF bytes, Hungarian font embedding, long-text pagination, private-note exclusion, corrupt-image rejection, safe filename');
