@@ -102,3 +102,31 @@ Mentetlen változás, aláírás rajzolása vagy fotófeldolgozás alatt az olda
 Frissítés: a teljes projektmappa tartalmának felülírása, majd npm ci → npm test → npm run build. Nincs új adatbázis, SQL vagy fiókbeállítás.
 
 08 ellenőrzés: sikeres teljes tesztcsomag és Next.js build. Böngészőben az üres adatlap három hiánya megjelent, a név és cím ellenőrzősora a megfelelő mezőre vitte a fókuszt; javítás után a lista eltűnt. Az automatikus helyi mentés folyamatban és elmentve állapotát is ellenőriztük. Felhős állapotok és kilépésvédelmi események automatizált tesztben ellenőrizve; fizikai telefon kényszerített bezárása nem tesztelt.
+
+## 09 – Mentett felvételek kezelése
+A mentett listában név/cím keresés mellett állapot és aktív/archivált szűrő használható egyszerre. Állapotok: Piszkozat, Felmérve, Lezárva. A korábbi felvételek Piszkozatként jelennek meg. A lezárás munkaszervezési jelölés; nem zárolja az adatlapot, nem jelent aláírást vagy jogi jóváhagyást.
+
+A Másolás új azonosítóval és mai felmérési dátummal hoz létre piszkozatot. Az adatmezőket átveszi, a fotókat, aláírást, aláíró nevét és felhős verzióazonosítókat kihagyja. Az eredeti felvétel megmarad. Archiválás után a felvétel az Archivált felvételek nézetből a Visszaállítás gombbal visszahozható. Nincs végleges törlés.
+
+Az állapot és archiválás mentés után a helyi adatlap része. Saját fiókban a Szinkronizálás viszi át másik készülékre. Régebbi appverzió az archivált felvételeket még az általános listában mutathatja; minden készüléken frissítsd az appot. Nincs új SQL vagy adatbázis-beállítás.
+
+Ellenőrzés: teljes tesztcsomag és Next.js build sikeres. Régi rekordok, kombinált szűrés, másolat önállósága, fotók/aláírás kihagyása és az új mezők szimulált kétkészülékes felhős átvitele ellenőrizve. Böngészőben állapotváltás, állapotszűrés, archiválás, visszaállítás, másolás, eredeti és másolat együttes megőrzése sikeres. Valódi két telefon közötti szinkront ebben a körben nem teszteltünk.
+
+Frissítés: a teljes projektmappa tartalmának felülírása, npm ci → npm test → npm run build → Git → Vercel. Utána Mentés és frissítés az appban.
+
+## 10 – Bérbeadási megbízási szerződés
+Új dokumentumtípus a meglévő appban. A borítón és a mentett listában a Bérbeadási megbízás gombbal indítható. Meglévő ingatlanfelvétel kártyáján a Bérbeadási megbízás indítása új szerződést készít, a kapcsolattartó és az ingatlan alapadatainak átvételével. Az eredeti felvétel megmarad; annak fotóit, aláírását és eladási jutalékát nem veszi át.
+
+Öt lépés: Megbízó; Megbízott; Ingatlan és díjak; Feltételek; Ellenőrzés és aláírás. A mintában lévő további személyazonosító adatok lenyitható részben találhatók. A megbízott nevét, címét és aláíróját saját adatokkal kell megadni: nincs beégetett irodanév vagy mintabeli szerződésszám.
+
+Díjszámítás: alapértelmezés az Egyhavi bérleti díj, Bruttó díj módban. 200 000 Ft havi díjnál így 200 000 Ft a fizetendő közvetítői díj. Választható az Éves bérleti díj százaléka is, a minta 12%-os induló százalékával. Mindkettő használható bruttó, nettó + megadott áfa vagy áfamentes módban. Egyhavi nettó díj + 27% áfa esetén 254 000 Ft; éves 12% nettó + 27% áfa esetén 365 760 Ft a fenti példában. Az eladási adatlap díjszámítása változatlan.
+
+A képernyőképes minta kilenc pontja szövegesen digitalizálva, helyesírási és megfogalmazási rendezéssel szerepel. Az üres személyes/irodai adatokat és az ingatlancímet a strukturált mezők pótolják. A 2. és 4. pont a kitöltött díjtáblázatra hivatkozik, így az egyhavi és százalékos díj is használható. A mintában szereplő 24 hónapos rendelkezés, 150%-os kötbér, utólagos értékesítéshez kapcsolódó 5% + áfa és a Budai Központi Kerületi Bíróságra vonatkozó kikötés is megmaradt. Mind a kilenc pont, valamint az Egyedi megállapodások szabadon szerkeszthető. Ez a küldött minta digitalizálása, nem jogi felülvizsgálat; éles használat előtt a feltételeket saját működésedhez kell ellenőrizni.
+
+A végén Megbízó és Megbízott külön aláírásmezője jelenik meg. A szerződés PDF-letöltéséhez mindkét aláírás szükséges. A piszkozat korábban is menthető és JSON-ként exportálható. A rajzolt aláírás képként kerül a PDF-be; nincs minősített elektronikus aláírás vagy időbélyeg-szolgáltatás. Tartalmi módosítás mindkét aláírást törli. Belső megjegyzés nem kerül a szerződésbe. Aláírásokkal együtt menthető és visszanyitható, másoláskor mindkét aláírás kimarad.
+
+Ugyanaz a helyi mentés, kézi felhős szinkronizálás, archiválás, visszaállítás, PDF-letöltés és nyomtatás működik. Az új mezők a meglévő privát JSON-mentésekbe kerülnek; új SQL vagy adatbázis nem kell. Minden készüléken frissítsd az appot, mielőtt az új dokumentumot szerkesztenéd.
+
+Ellenőrzés: teljes tesztcsomag és Next.js build sikeres. Tesztek: két díjszámítási mód és három díjmód, hiányzó adatok, két aláírás, mindkettő törlése módosításkor, szerkesztett kikötések, másolat tisztítása, belső megjegyzés kizárása. Szimulált felhős átadásban az új dokumentumtípus, díjmód, szöveg és második aláírás megmaradt. Háromoldalas próbanyomat összes oldala vizuálisan ellenőrizve. Böngészőben kitöltés, mindkét díjmód, két rajzolt próbaaláírás, közvetlen PDF-letöltés, mentés és visszanyitás, módosítás utáni új aláírás kérése sikeres. Fizikai telefonos megosztás és valódi kétfiókos szinkron ebben a körben nem tesztelt.
+
+Frissítés: a teljes projektmappa tartalmának felülírása, npm ci → npm test → npm run build → Git → Vercel. Élesítés után Mentés és frissítés.

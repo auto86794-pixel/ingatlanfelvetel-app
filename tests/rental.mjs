@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {parseHTML} from 'linkedom';
+import {PDFDocument} from 'pdf-lib';
+import {newRental,rentalFee,rentalIssues,defaultRentalClauses,isRental} from '../lib/rental-mandate.js';
+import {renderDocument} from '../lib/document-render.js';
+import {copyRecord} from '../lib/record-management.js';
+import {extractDocument,createPdf,pdfFilename} from '../lib/pdf-export.js';
+const r={...newRental({id:'original',name:'Teszt Ágnes',city:'Debrecen',address:'Minta utca 12.'}),id:'rental01',date:'2026-11-17',homeAddress:'Debrecen, Példa utca 3.',brokerName:'Minta Ingatlaniroda',brokerAddress:'Debrecen, Teszt tér 1.',brokerContact:'Próba Péter',rentalFeeMethod:'Éves bérleti díj százaléka',rentalBasis:'Nettó díj + áfa',rent:'200000',deposit:'400000',rentalVat:'27',signingPlace:'Debrecen',rentalInternal:'PRIVATE_RENTAL',signature:'data:image/png;base64,YQ==',signatureBroker:'data:image/png;base64,Yg=='};
+assert(isRental(r));assert.equal(r.sourceRecordId,'original');assert.equal(defaultRentalClauses.length,9);assert.equal(rentalFee(r).total,365760);assert.equal(rentalFee({...r,rentalFeeMethod:'Egyhavi bérleti díj',rentalBasis:'Bruttó díj'}).total,200000);assert.equal(rentalFee({...r,rentalFeeMethod:'Egyhavi bérleti díj'}).total,254000);assert.equal(rentalIssues(r).length,0);
+assert.equal(rentalFee({...r,rentalBasis:'Bruttó díj'}).total,288000);assert.equal(rentalFee({...r,rentalBasis:'Áfamentes díj'}).total,288000);assert.equal(rentalFee({...r,rent:'-1'}).state,'invalid');assert.equal(rentalFee({...r,rentalFeeMethod:''}).state,'invalid');assert.equal(rentalIssues({...r,rentalPercent:'abc'}).find(x=>x.step===2).key,'rentalPercent');assert.equal(rentalFee({...r,rentalVat:''}).state,'incomplete');assert(rentalIssues({...r,signatureBroker:''}).some(x=>x.key==='signatureBroker'));
+const html=renderDocument(r);assert(!html.includes('PRIVATE_RENTAL'));assert(!html.includes('INGATLANFELVÉTELI ADATLAP'));assert(html.includes('Budai Központi'));assert(html.includes('150%'));assert(html.includes('24 hónap'));assert(!renderDocument({...r,rentalClause9:'Másik kikötés'}).includes('Budai Központi'));
+const {document}=parseHTML('<html><body></body></html>');const model=extractDocument(html,document);assert.equal(model.signatures.length,2);assert.equal(model.signatures[1].src,r.signatureBroker);assert.equal(model.sections.filter(x=>/^\d\./.test(x.title)).length,9);
+const copied=copyRecord(r,'new','2026-11-18');assert.equal(copied.signatureBroker,undefined);assert.equal(copied.signature,undefined);assert.equal(copied.rentalClause9,r.rentalClause9);assert.equal(copied.documentType,'rental-mandate');
+assert(pdfFilename(r).startsWith('Berbeadasi_megbizas_'));
+console.log('PASS: rental annual fee/net/gross/VAT, editable nine clauses, two signatures, copy reset, private notes, renderer');
